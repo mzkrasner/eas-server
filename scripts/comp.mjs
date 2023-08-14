@@ -23,9 +23,9 @@ const getFilePath = (path) => {
   return path instanceof URL ? path.pathname : resolve(cwd(), path);
 }
 
-export const dynamicCreate = async(identifier) => {
+export const dynamicCreate = async(identifier, inputSeed) => {
 
-    const seed = process.env.SEED
+    const seed = inputSeed
     const key = fromString(
       seed,
       "base16"
