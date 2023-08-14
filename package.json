@@ -4,11 +4,7 @@
   "private": true,
   "scripts": {
     "firstTime": "npx aws-sdk-js-codemod -t v2-to-v3 .",
-    "generate": "node scripts/commands.mjs",
-    "dev": "node scripts/run.mjs",
     "nextDev": "next dev",
-    "ceramic": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' ceramic daemon --config ./composedb.config.json",
-    "ceramic:local": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' npx @ceramicnetwork/cli daemon",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -30,10 +26,12 @@
     "did-session": "^1.0.0",
     "dids": "^3.2.0",
     "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
     "next": "^12.0.4",
     "ora": "^6.1.2",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@composedb/types": "^0.3.0",
