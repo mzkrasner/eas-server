@@ -14,7 +14,7 @@ import { DID } from "dids";
 import { Ed25519Provider } from "key-did-provider-ed25519";
 import { getResolver } from "key-did-resolver";
 import { fromString } from "uint8arrays/from-string";
-import { env } from "./env.mjs";
+// import { env } from "./env.mjs";
 
 const { readFile, readJSON, writeFile, writeJSON, ensureDir } = fs;
 const ceramic = new CeramicClient("https://ceramic-temp.hirenodes.io/");
@@ -25,7 +25,7 @@ const getFilePath = (path) => {
 
 export const dynamicCreate = async(identifier) => {
 
-    const seed = env.SEED
+    const seed = node.env.SEED
     const key = fromString(
       seed,
       "base16"
