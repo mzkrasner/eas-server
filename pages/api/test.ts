@@ -7,6 +7,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const hash = req.body;
   console.log(hash.toString());
   const stream = await dynamicCreate(hash);
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   res.status(200).json({ stream });
 };
