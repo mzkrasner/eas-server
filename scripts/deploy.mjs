@@ -1,6 +1,6 @@
 import fs from "fs-extra";
-import { readFileSync, readdirSync } from 'fs';
-import path, { extname, resolve } from 'path'
+import { readdirSync, readFileSync } from 'fs';
+import  { extname, resolve } from 'path'
 import { cwd } from "process";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import {
@@ -14,10 +14,10 @@ import { DID } from "dids";
 import { Ed25519Provider } from "key-did-provider-ed25519";
 import { getResolver } from "key-did-resolver";
 import { fromString } from "uint8arrays/from-string";
-// import { env } from "./env.mjs";
 
-const { readFile, readJSON, writeFile, writeJSON, ensureDir } = fs;
-const ceramic = new CeramicClient("https://ceramic-temp.hirenodes.io/");
+
+const { readFile, writeFile } = fs;
+const ceramic = new CeramicClient("http://localhost:7007");
 
 const getFilePath = (path) => {
   return path instanceof URL ? path.pathname : resolve(cwd(), path);
@@ -25,7 +25,7 @@ const getFilePath = (path) => {
 
 export const dynamicCreate = async(identifier) => {
 
-    const seed = process.env.SEED
+  const seed = readFileSync('./admin_seed.txt')
     const key = fromString(
       seed,
       "base16"
@@ -43,17 +43,17 @@ const encodeComposites = async (hash) => {
     const schema = await readFile(
       getFilePath("./composites/attestation.graphql")
     );
-    const string = await schema.toString().replace("Attest", hash);
+    const string = await schema.toString().replace("Attest", ('A'+ hash.slice(2, hash.length)));
     await writeFile(getFilePath(`./composites/attest.graphql`), string);
 
     composite = await createComposite(ceramic, `./composites/attest.graphql`)
     await writeEncodedComposite(
       composite, 
-      `./src/__generated__/new.json`
+      `./src/__generated__/${hash}.json`
     )
    
     const newDef = await readFile(
-        getFilePath(`./src/__generated__/new.json`)
+        getFilePath(`./src/__generated__/${hash.split('.graphql')[0]}.json`)
       );
      const newString = await newDef.toString();
      const stream = newString.split('"')[7]
@@ -70,7 +70,7 @@ const mergeComposites = async () => {
     setTimeout(async () => {
       await mergeEncodedComposites(
         ceramic, 
-        files.map(file => (`./src/__generated__/new`)), 
+        files.map(file => (`./src/__generated__/${file}`)), 
         './src/__generated__/definition.json'
       )
       await writeEncodedCompositeRuntime(

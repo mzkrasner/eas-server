@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "generate": "node scripts/commands.mjs",
     "firstTime": "npx aws-sdk-js-codemod -t v2-to-v3 .",
+    "dev": "node scripts/run.mjs",
+    "streams": "node scripts/checkStreams.mjs",
     "nextDev": "next dev",
     "build": "next build",
+    "ceramic": "CERAMIC_ENABLE_EXPERIMENTAL_COMPOSE_DB='true' ceramic daemon --config ./composedb.config.json",
     "start": "next start",
     "lint": "next lint"
   },
