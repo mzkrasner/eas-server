@@ -27,7 +27,7 @@ const getFilePath = (path) => {
 
 export const dynamicCreate = async(identifier) => {
 
-    const seed = process.env.SEED
+    const seed = 'dfabafa4168279e29d326b5f3eecc64c0faddc69ff089f2381f81249e5369992'
     const key = fromString(
       seed,
       "base16"
