@@ -23,9 +23,9 @@ const getFilePath = (path) => {
   return path instanceof URL ? path.pathname : resolve(cwd(), path);
 }
 
-export const dynamicCreate = async(identifier, inputSeed) => {
+export const dynamicCreate = async(identifier) => {
 
-    const seed = inputSeed
+    const seed = process.env.SEED
     const key = fromString(
       seed,
       "base16"
@@ -49,11 +49,11 @@ const encodeComposites = async (hash) => {
     composite = await createComposite(ceramic, `./composites/attest.graphql`)
     await writeEncodedComposite(
       composite, 
-      `./src/__generated__/${hash}.json`
+      `./src/__generated__/new.json`
     )
    
     const newDef = await readFile(
-        getFilePath(`./src/__generated__/${hash}.json`)
+        getFilePath(`./src/__generated__/new.json`)
       );
      const newString = await newDef.toString();
      const stream = newString.split('"')[7]
@@ -70,7 +70,7 @@ const mergeComposites = async () => {
     setTimeout(async () => {
       await mergeEncodedComposites(
         ceramic, 
-        files.map(file => (`./src/__generated__/${file}`)), 
+        files.map(file => (`./src/__generated__/new`)), 
         './src/__generated__/definition.json'
       )
       await writeEncodedCompositeRuntime(
