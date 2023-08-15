@@ -8,11 +8,19 @@ Install your dependencies:
 npm install
 ```
 
-2. Run the program:
+2. Generate your admin seed, admin did, and ComposeDB configuration file:
+
+```bash
+npm run generate
+```
+
+3. Finally, run your application in a new terminal (first ensure you are running node v16 in your terminal):
 
 ```bash
 npm run dev
 ```
+
+You can either hit the `/api/deploy-virtual.ts` endpoint (with an input string representing the txHash of the schema), or interact with the frontend by opening [http://localhost:3000](http://localhost:3000) in your browser 
 
 ## Learn More
 

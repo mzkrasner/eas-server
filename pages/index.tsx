@@ -14,33 +14,12 @@ const Home: NextPage = () => {
   const { ceramic, composeClient } = clients;
   const [profile, setProfile] = useState<BasicProfile | undefined>();
   const [hash, setHash] = useState("");
+  const [session, setSession] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleLogin = async () => {
-    await authenticateCeramic(ceramic, composeClient);
-    await getProfile();
-  };
-
-  const getProfile = async () => {
-    setLoading(true);
-    if (ceramic.did !== undefined) {
-      const profile = await composeClient.executeQuery(`
-        query {
-          viewer {
-            basicProfile {
-              id
-              name
-              description
-              gender
-              emoji
-            }
-          }
-        }
-      `);
-
-      setProfile(profile?.data?.viewer?.basicProfile);
-      setLoading(false);
-    }
+    const did = await authenticateCeramic(ceramic, composeClient);
+    setSession(did.id)
   };
 
   const createAttestationSchema = async () => {
@@ -59,11 +38,10 @@ const Home: NextPage = () => {
   };
 
   const createAttestation = async () => {
-
     //all dummy data for subfields --> dynamic field is on line 66 to show dynamic creation of attestations
     const data = await composeClient.executeQuery(`
     mutation {
-      create${'A' + hash.slice(2, hash.length)}(input: {
+      create${"A" + hash.slice(2, hash.length)}(input: {
         content: {
           uid: "0x633f50e1d06eb2d888b17213f24214ecfbe842ce57bd64714e8636e782c0c67f" 
           schema: "0x633f50e1d06eb2d888b17213f24214ecfbe842ce57bd64714e8636e782c0c67f" 
@@ -96,6 +74,7 @@ const Home: NextPage = () => {
     if (localStorage.getItem("did")) {
       handleLogin();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -112,9 +91,11 @@ const Home: NextPage = () => {
           width="100"
           height="100"
           className={styles.logo}
+          alt="ceramic logo"
         />
-        {profile === undefined && ceramic.did === undefined ? (
+        {!session.length ? (
           <button
+            style={{ width: "10rem" }}
             onClick={() => {
               handleLogin();
             }}
@@ -134,23 +115,28 @@ const Home: NextPage = () => {
               />
             </div>
             <div className={styles.buttonContainer}>
-              <button
-                onClick={() => {
-                  createAttestationSchema();
-                }}
-              >
-                {loading ? "Loading..." : "Create Schema"}
-              </button>
+              <div>
+                <button
+                  style={{ width: "10rem" }}
+                  onClick={() => {
+                    createAttestationSchema();
+                  }}
+                >
+                  {loading ? "Loading..." : "Create Schema"}
+                </button>
+                <br></br>
+                <button
+                  style={{ width: "10rem" }}
+                  onClick={() => {
+                    createAttestation();
+                  }}
+                >
+                  Create Attestation
+                </button>
+              </div>
             </div>
           </div>
         )}
-        <button
-          onClick={() => {
-            createAttestation();
-          }}
-        >
-          Create Attestation
-        </button>
       </main>
     </div>
   );
