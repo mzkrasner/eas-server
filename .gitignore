@@ -2,4 +2,3 @@
 node_modules/*
 .env.local
 admin_seed.txt
-composedb.config.json
